@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Signature Tool</title>
+  <style>
+    #canvas {
+      border: 1px solid #000;
+    }
+    button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Digital Signature Tool</h1>
+  <canvas id="canvas" width="400" height="200"></canvas>
+  <br>
+  <button onclick="clearSignature()">Clear</button>
+  <button onclick="saveSignature()">Save</button>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    let isSigning = false;
+  
+    canvas.addEventListener('mousedown', startSigning);
+    canvas.addEventListener('mousemove', drawSignature);
+    canvas.addEventListener('mouseup', stopSigning);
+    canvas.addEventListener('mouseout', stopSigning);
+  
+    function startSigning(e) {
+      isSigning = true;
+      const { offsetX, offsetY } = e;
+      context.beginPath();
+      context.moveTo(offsetX, offsetY);
+    }
+  
+    function drawSignature(e) {
+      if (!isSigning) return;
+      const { offsetX, offsetY } = e;
+      context.lineTo(offsetX, offsetY);
+      context.stroke();
+    }
+  
+    function stopSigning() {
+      isSigning = false;
+    }
+  
+    function clearSignature() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  
+    function saveSignature() {
+      const image = canvas.toDataURL(); // Save canvas as image data
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = 'signature.png'; // Specify the file name
+      link.click(); // Trigger download
+    }
+  </script>
+</body>
+</html>
